@@ -9,6 +9,10 @@ body {
   color: white;
 }
 
+.App-header input {
+  margin: 5px;
+}
+
 .App-intro {
   font-size: large;
 }
