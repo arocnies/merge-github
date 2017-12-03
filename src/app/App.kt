@@ -27,10 +27,11 @@ class App : RComponent<RProps, App.State>() {
                 // INPUT for head (from branch)
                 input {
                     attrs.id = "head"
-                    attrs.defaultValue = "dev"
+                    attrs.value = state.head ?: "dev"
                     attrs.onChangeFunction = { event ->
+                        val text = (event.target as HTMLInputElement).value
                         setState {
-                            state.head = (event.target as HTMLInputElement).value
+                            head = text
                         }
                     }
                 }
@@ -38,10 +39,11 @@ class App : RComponent<RProps, App.State>() {
                 // INPUT for base (into branch)
                 input {
                     attrs.id = "base"
-                    attrs.defaultValue = "master"
+                    attrs.value = state.base ?: "master"
                     attrs.onChangeFunction = { event ->
+                        val text = (event.target as HTMLInputElement).value
                         setState {
-                            state.base = (event.target as HTMLInputElement).value
+                            base = text
                         }
                     }
                 }
@@ -58,11 +60,15 @@ class App : RComponent<RProps, App.State>() {
                             base = "${state.base}"
                         }
 
-                        println("Posting: $body")
-                        val response = githubApi.request("POST", "/repos/arocnies/Test-Repo-256/pulls",
-                                // headers = (), TODO Add auth headers. Maybe basic auth with token instead of pass.
-                                body = body)
-                        println("Response: $response")
+                        println("Posting: ${JSON.stringify(body)}")
+
+                        val response = githubApi.requestWithAuth(method = "POST",
+                                url = "/repos/arocnies/Test-Repo-256/pulls",
+                                username = "arocnies",
+                                body = JSON.stringify(body),
+                                password = "PUT GITHUB TOKEN HERE")
+
+                        println("Response: ${JSON.stringify(response)}")
 
                         setState {
                             this.response = response
